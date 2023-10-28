@@ -5,61 +5,65 @@ using UnityEngine.EventSystems;
 
 public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    public bool isDropped = false;
-    // public GameObject targetObject;
-    public CollisionDetect collisionDetect;
-
     [SerializeField] private Canvas canvas;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
-    public void Update()
-    {
-        if (isDropped)
-        {
+    public List<DragDrop> dragDropItems = new List<DragDrop>();
 
-            /*if (targetObject != null)
-            {
-                // Set this GameObject as the parent of targetObject
-                targetObject.transform.parent = transform;
-            }*/
-        }
-
-        if (!collisionDetect.isEntered)
-        {
-            isDropped = false;
-        }
-    }
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
+   
     }
-
+    private void Start()
+    {
+       
+    }
+    private void Update()
+    {
+        
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
-        if (collisionDetect.isEntered && isDropped) return;
-        canvasGroup.alpha = .6f;
+        foreach (DragDrop dragDrop in dragDropItems)
+        {
+            if (dragDrop.isDropped)
+            {
+                return;
+            }
+        }
+        canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = false;
-
-
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         //Debug.Log("OnDrag");
-        if (collisionDetect.isEntered && isDropped) return;
+        foreach (DragDrop dragDrop in dragDropItems)
+        {
+            if (dragDrop.isDropped)
+            {
+                return;
+            }
+        }
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
-        if (collisionDetect.isEntered && isDropped) return;
+        foreach (DragDrop dragDrop in dragDropItems)
+        {
+            if (dragDrop.isDropped)
+            {
+                return;
+            }
+        }
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
-
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -68,14 +72,16 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler, IBegin
     }
     public void OnDrop(PointerEventData eventData)
     {
-        //GameObject droppedObject = eventData.pointerDrag;
-        isDropped = true;
-        Debug.Log("OnDrop");
-        if (eventData.pointerDrag != null)
+        DragDrop droppedDragDrop = eventData.pointerDrag.GetComponent<DragDrop>();
+
+        if (droppedDragDrop != null)
         {
+            // Set isDropped to true for the specific DragDrop script.
+            droppedDragDrop.isDropped = true;
+
+            Debug.Log("OnDrop");
             eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         }
     }
 
-  
 }
