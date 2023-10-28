@@ -91,7 +91,7 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public void OnBeginDrag(PointerEventData eventData) 
     {
         Debug.Log("OnBeginDrag");
-        //if (itemSlot.isDropped) return;
+       // if(isDropped) return;
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -99,14 +99,14 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public void OnDrag(PointerEventData eventData) 
     {
         //Debug.Log("OnDrag");
-        //if (itemSlot.isDropped) return;
+       // if (isDropped) return;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
-        //if (itemSlot.isDropped) return;
+       // if (isDropped) return;
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
     }

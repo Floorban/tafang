@@ -11,30 +11,31 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler, IBegin
     private CanvasGroup canvasGroup;
     public List<DragDrop> dragDropItems = new List<DragDrop>();
 
+    public bool isEntered;
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-   
     }
-    private void Start()
+
+    public void OnTriggerEnter(Collider other)
+    {
+        
+            isEntered = true;
+        
+    }
+
+    public void OnTriggerExit(Collider other)
     {
        
-    }
-    private void Update()
-    {
+            isEntered = false;
         
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
         Debug.Log("OnBeginDrag");
-        foreach (DragDrop dragDrop in dragDropItems)
-        {
-            if (dragDrop.isDropped)
-            {
-                return;
-            }
-        }
+        if (isEntered) return;
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = false;
     }
@@ -42,26 +43,14 @@ public class ItemSlot : MonoBehaviour, IDropHandler, IPointerDownHandler, IBegin
     public void OnDrag(PointerEventData eventData)
     {
         //Debug.Log("OnDrag");
-        foreach (DragDrop dragDrop in dragDropItems)
-        {
-            if (dragDrop.isDropped)
-            {
-                return;
-            }
-        }
+        if (isEntered) return;
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
-        foreach (DragDrop dragDrop in dragDropItems)
-        {
-            if (dragDrop.isDropped)
-            {
-                return;
-            }
-        }
+        if (isEntered) return;
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
     }
